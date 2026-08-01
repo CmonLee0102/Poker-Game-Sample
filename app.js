@@ -222,7 +222,7 @@ function introGame(id) {
 const BJ_ROSTER = [{ name: 'Ava', emoji: '👩' }, { name: 'Leo', emoji: '🧔' }, { name: 'Sam', emoji: '🧑' }];
 
 const Blackjack = {
-  shoe: null, bet: 50, dealer: [], hands: [], active: 0, phase: 'bet', insurance: 0, ai: [], numAi: 2,
+  shoe: null, bet: 50, dealer: [], hands: [], active: 0, phase: 'bet', insurance: 0, ai: [], numAi: 0,
 
   enter() {
     if (!this.shoe) this.shoe = new Shoe(6);
