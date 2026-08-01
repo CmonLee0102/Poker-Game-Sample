@@ -13,14 +13,16 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
+html { height: 100%; }
 
 body {
   font-family: "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
   background:
     radial-gradient(1200px 700px at 50% -20%, #26303c 0%, #0c0f14 55%, #07090d 100%);
+  background-attachment: fixed;
   color: var(--text);
-  overflow: hidden;
+  min-height: 100%;
+  overflow-x: hidden;
   display: flex; flex-direction: column;
 }
 body::before {
@@ -175,13 +177,13 @@ body::before {
 /* ---------- 撲克牌 (以 vh 縮放，確保整體不超出螢幕) ---------- */
 .cards { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; perspective: 900px; }
 .card {
-  --cw: clamp(42px, 6.4vh, 60px); width: var(--cw); height: calc(var(--cw) * 1.42);
+  --cw: clamp(38px, min(6.4vh, 12vw), 60px); width: var(--cw); height: calc(var(--cw) * 1.42);
   border-radius: 7px; background: linear-gradient(160deg, #ffffff, #eef0f3); color: #16181d;
   position: relative; box-shadow: 0 3px 7px rgba(0,0,0,.45);
   display: flex; flex-direction: column; justify-content: space-between;
   padding: 5px 6px; font-weight: 800; user-select: none; animation: deal .28s ease;
 }
-.card.sm { --cw: clamp(36px, 5.2vh, 48px); }
+.card.sm { --cw: clamp(32px, min(5.2vh, 10vw), 48px); }
 .card.red { color: #d1352a; }
 .card .r { font-size: calc(var(--cw) * .30); line-height: 1; }
 .card .s { font-size: calc(var(--cw) * .34); text-align: right; line-height: 1; }
@@ -344,3 +346,75 @@ input[type=range] { width: clamp(120px, 16vw, 190px); accent-color: var(--gold);
 .btn.primary { box-shadow: 0 3px 10px rgba(184,146,58,.35); }
 .bet-spot { backdrop-filter: blur(2px); }
 h1 { text-shadow: 0 2px 8px rgba(0,0,0,.5); }
+
+/* ============================================================
+   響應式 — 自動偵測螢幕大小 / 比例並調整
+   ============================================================ */
+
+/* 矮螢幕 (寬螢幕但高度不足，例如 16:9 / 21:9)：縮小垂直用量 */
+@media (max-height: 720px) {
+  .felt { border-radius: 90px; padding: 16px 22px; }
+  .felt::before { font-size: 22vh; }
+  .table-wrap { gap: 10px; padding: 10px 18px 12px; }
+  .controls { padding: 12px 16px; gap: 10px; }
+}
+
+/* 平板 / 小筆電 */
+@media (max-width: 960px) {
+  .felt { border-radius: 60px; border-width: 9px; padding: 18px 16px; }
+  .felt::before { font-size: 20vh; }
+  .table-wrap { padding: 10px 12px 12px; }
+  .seat, .ai-seat { min-width: 104px; }
+  .seat-row { gap: 14px; }
+  .topbar { padding: 0 14px; gap: 10px; }
+  .brand { font-size: 18px; }
+  .tile-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+  input[type=range] { width: clamp(110px, 30vw, 180px); }
+}
+
+/* 手機 / 窄螢幕：改為可捲動、堆疊、縮小 */
+@media (max-width: 620px) {
+  :root { --bar: 52px; }
+  body { overflow-y: auto; }
+  #app { min-height: 0; }
+  .lobby, .home { justify-content: flex-start; }
+  .felt { border-radius: 26px; border-width: 6px; padding: 14px 12px; min-height: 52vh; }
+  .felt::before { display: none; }
+  .felt::after { border-radius: 20px; inset: 8px; }
+  .table-head { gap: 10px; }
+  .table-head h2 { font-size: 17px; }
+  .table-head .btn { padding: 7px 12px; }
+  .chip-display { padding: 5px 10px; gap: 6px; }
+  .chip-display b { font-size: 16px; }
+  .chip-display .small { display: none; }
+  .lang-btn { width: 36px; height: 32px; }
+  .seat, .ai-seat { min-width: 88px; padding: 5px; }
+  .seat .name, .ai-seat .name { font-size: 12px; }
+  .seat-row { gap: 8px; }
+  .controls { padding: 11px 12px; gap: 8px; }
+  .controls .chip-btn { width: 42px; height: 42px; font-size: 12px; }
+  .bet-amt { font-size: 16px; min-width: 66px; }
+  .btn { padding: 8px 13px; font-size: 13px; }
+  .tile-grid { grid-template-columns: repeat(2, 1fr); gap: 9px; }
+  .cat-section { width: 96vw; }
+  .notice { padding: 20px 22px 26px; width: 94vw; }
+  .notice-h { font-size: clamp(20px, 6vw, 28px); letter-spacing: 2px; }
+  .notice-body { font-size: 13.5px; }
+  .notice-stamp { font-size: 18px; top: 22px; right: 16px; }
+  .bill { width: 90%; }
+  .bill-amount { font-size: clamp(28px, 9vw, 42px); }
+  .intro-rules { padding: 13px 15px; }
+  .intro-desc { font-size: 14px; }
+  .stat-row { gap: 12px; font-size: 12px; }
+}
+
+/* 直式手機：牌桌高一點、對手區可換行 */
+@media (orientation: portrait) and (max-width: 620px) {
+  .felt { min-height: 46vh; }
+  .seat-row { flex-wrap: wrap; }
+}
+
+/* 超寬螢幕：限制內容寬度置中，避免元素被拉太散 */
+@media (min-width: 1500px) {
+  .table-wrap { max-width: 1320px; }
+}
