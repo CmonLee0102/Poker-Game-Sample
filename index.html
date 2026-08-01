@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>撲克遊戲 · Poker Games</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand" id="brand">🃏&nbsp;<span id="brandTxt"></span></div>
+    <div class="spacer"></div>
+    <div class="chip-display">
+      <span class="coin"></span>
+      <b id="chipCount">0</b>
+      <span class="small" id="chipLbl"></span>
+    </div>
+    <button class="lang-btn" id="langBtn"></button>
+  </div>
+
+  <div id="app"></div>
+
+  <script src="engine.js"></script>
+  <script src="i18n.js"></script>
+  <script src="games2.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
