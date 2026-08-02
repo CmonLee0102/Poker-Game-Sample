@@ -175,7 +175,11 @@ body::before {
 }
 
 /* ---------- 撲克牌 (以 vh 縮放，確保整體不超出螢幕) ---------- */
-.cards { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; perspective: 900px; }
+.cards { display: flex; gap: clamp(4px, 1.1vw, 8px); justify-content: center; flex-wrap: wrap; perspective: 900px; }
+
+/* 發牌/動畫鎖定期間：游標提示 + 停用互動(JS 攔截外的第二層保險) */
+#app.locked { cursor: progress; }
+#app.locked .btn, #app.locked .chip-btn, #app.locked .bet-spot, #app.locked .tile, #app.locked .card.selectable { pointer-events: none; opacity: .9; }
 .card {
   --cw: clamp(38px, min(6.4vh, 12vw), 60px); width: var(--cw); height: calc(var(--cw) * 1.42);
   border-radius: 7px; background: linear-gradient(160deg, #ffffff, #eef0f3); color: #16181d;

@@ -572,7 +572,7 @@ const DragonTiger = {
   async deal() {
     const total = this.bets.dragon + this.bets.tiger + this.bets.tie;
     if (total > Bank.get()) return toast(t('notEnough'));
-    Bank.add(-total); refreshChips();
+    Bank.add(-total); refreshChips(); lockInput();
     const deck = shuffle(freshDeck());
     this.phase = 'deal'; this.d = deck.pop(); this.render(); await sleep(400);
     this.tg = deck.pop(); this.render(); await sleep(500);
@@ -580,6 +580,7 @@ const DragonTiger = {
   },
 
   settle(total) {
+    unlockInput();
     const dv = this.val(this.d), tv = this.val(this.tg);
     let payout = 0, res;
     if (dv > tv) { res = t('dragonWin'); payout += this.bets.dragon * 2; }
@@ -640,20 +641,20 @@ const CasinoWar = {
 
   async deal() {
     if (this.ante > Bank.get()) return toast(t('notEnough'));
-    Bank.add(-this.ante); refreshChips();
+    Bank.add(-this.ante); refreshChips(); lockInput();
     this.deck = shuffle(freshDeck());
     this.warBet = 0;
     this.phase = 'reveal'; this.d = this.deck.pop(); this.render(); await sleep(350);
     this.p = this.deck.pop(); this.render(); await sleep(400);
     if (this.p.rank > this.d.rank) this.finish(this.ante * 2, 'win');
     else if (this.p.rank < this.d.rank) this.finish(0, 'lose');
-    else { this.phase = 'war'; this._msg = t('war_tieMsg'); this._cls = ''; this.render(); }
+    else { unlockInput(); this.phase = 'war'; this._msg = t('war_tieMsg'); this._cls = ''; this.render(); }
   },
 
   surrender() { const back = Math.floor(this.ante / 2); Bank.add(back); refreshChips(); Bank.record(back - this.ante); this._msg = t('youLost', { n: fmt(this.ante - back) }); this._cls = 'lose'; this.phase = 'done'; this.render(); },
 
   async goWar() {
-    Bank.add(-this.ante); refreshChips(); this.warBet = this.ante;
+    Bank.add(-this.ante); refreshChips(); lockInput(); this.warBet = this.ante;
     for (let i = 0; i < 3 && this.deck.length; i++) this.deck.pop(); // 燒三張
     this.d = this.deck.pop(); this.render(); await sleep(350);
     this.p = this.deck.pop(); this.render(); await sleep(400);
@@ -662,12 +663,14 @@ const CasinoWar = {
     else this.finishWar(0);
   },
   finishWar(payout) {
+    unlockInput();
     Bank.add(payout); refreshChips();
     const staked = this.ante * 2; const net = payout - staked; Bank.record(net);
     this._msg = net > 0 ? t('youWon', { n: fmt(net) }) : net < 0 ? t('youLost', { n: fmt(-net) }) : t('push');
     this._cls = resultCls(net); this.phase = 'done'; this.render();
   },
   finish(payout, kind) {
+    unlockInput();
     Bank.add(payout); refreshChips();
     const net = payout - this.ante; Bank.record(net);
     this._msg = kind === 'win' ? t('youWon', { n: fmt(net) }) : t('youLost', { n: fmt(this.ante) });
@@ -717,7 +720,7 @@ const BigSmall = {
 
   async deal() {
     if (this.ante > Bank.get()) return toast(t('notEnough'));
-    Bank.add(-this.ante); refreshChips();
+    Bank.add(-this.ante); refreshChips(); lockInput();
     const deck = shuffle(freshDeck());
     this.phase = 'reveal'; this.p = deck.pop(); this.render(); await sleep(350);
     this.d = deck.pop(); this.render(); await sleep(420);
@@ -725,6 +728,7 @@ const BigSmall = {
   },
 
   settle() {
+    unlockInput();
     const pv = this.p.rank, dv = this.d.rank;
     let payout = 0;
     if (pv > dv) payout = this.ante * 2; else if (pv === dv) payout = this.ante; // 平手退還

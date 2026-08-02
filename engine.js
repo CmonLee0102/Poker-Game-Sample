@@ -25,10 +25,23 @@ function freshDeck() {
   return d;
 }
 
-// Fisher–Yates 洗牌
+// 無偏均勻亂數 [0, n)：優先用加密級 crypto 並以「拒絕採樣」消除模數偏差，
+// 確保每個結果出現機率完全相等；環境不支援時退回 Math.random。
+function randInt(n) {
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    const limit = Math.floor(0x100000000 / n) * n; // 可整除的上界
+    const buf = new Uint32Array(1);
+    let x;
+    do { crypto.getRandomValues(buf); x = buf[0]; } while (x >= limit); // 落在偏差區就重抽
+    return x % n;
+  }
+  return Math.floor(Math.random() * n);
+}
+
+// Fisher–Yates 洗牌（標準演算法）：每一種排列出現的機率都相等
 function shuffle(deck) {
   for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = randInt(i + 1);            // j 均勻取自 [0, i]
     [deck[i], deck[j]] = [deck[j], deck[i]];
   }
   return deck;

@@ -4,7 +4,10 @@
 
 const app = document.getElementById('app');
 const chipCount = document.getElementById('chipCount');
-const App = { redraw: () => renderLobby() };
+const App = { redraw: () => renderLobby(), locked: false };
+// 發牌/動畫期間鎖定互動，避免連點造成重複發牌或狀態錯亂
+function lockInput() { App.locked = true; if (app.classList) app.classList.add('locked'); }
+function unlockInput() { App.locked = false; if (app.classList) app.classList.remove('locked'); }
 
 function refreshChips() { chipCount.textContent = fmt(Bank.get()); }
 function toast(msg, ms = 1800) {
@@ -36,7 +39,11 @@ function clickSound() {
 if (typeof document !== 'undefined' && document.addEventListener) {
   document.addEventListener('click', (e) => {
     const sel = '.btn,.tile.ready,.chip-btn,.bet-spot,.lang-btn,.card.selectable,#enterBtn,#startBtn,[data-add],[data-bi],[data-spot],[data-coin],[data-coins],[data-u],[data-sel]';
-    if (e.target.closest && e.target.closest(sel)) clickSound();
+    const hit = e.target.closest && e.target.closest(sel);
+    if (!hit) return;
+    // 鎖定期間攔截點擊，讓事件不會觸發元素的 onclick
+    if (App.locked) { e.preventDefault(); e.stopImmediatePropagation(); return; }
+    clickSound();
   }, true);
 }
 
@@ -393,6 +400,7 @@ const Blackjack = {
   },
 
   async dealerPlay() {
+    lockInput();
     this.phase = 'dealer'; this.render();
     // 同桌 AI 依基本策略自動補牌 (未達 17 就要牌)
     for (const a of this.ai) {
@@ -409,6 +417,7 @@ const Blackjack = {
   },
 
   settle() {
+    unlockInput();
     const dv = bjValue(this.dealer), dealerBJ = isBlackjack(this.dealer);
     let net = 0;
     for (const h of this.hands) {
@@ -639,6 +648,7 @@ const Baccarat = {
     const totalBet = Object.values(this.bets).reduce((a, b) => a + b, 0);
     if (totalBet > Bank.get()) return toast(t('notEnough'));
     Bank.add(-totalBet); refreshChips();
+    lockInput();
     this.phase = 'deal';
     const P = this.playerCards = [], B = this.bankerCards = [];
     P.push(this.shoe.draw()); this.render(); await sleep(280);
@@ -667,6 +677,7 @@ const Baccarat = {
   },
 
   settle() {
+    unlockInput();
     const P = this.playerCards, B = this.bankerCards;
     const pt = this.total(P), bt = this.total(B);
     const outcome = pt > bt ? 'player' : (bt > pt ? 'banker' : 'tie');
@@ -878,9 +889,9 @@ const Holdem = {
     this.players.forEach(x => { if (x !== p && !x.folded && !x.allin) x.acted = false; });
   },
 
-  humanFold() { const p = this.players[0]; p.folded = true; p.acted = true; p.lastAction = t('aFold'); this.advance(); this.continueLoop(); },
-  humanCall() { const p = this.players[0]; p.acted = true; const toCall = this.currentBet - p.bet; this.doCall(p); p.lastAction = toCall === 0 ? t('aCheck') : (p.allin ? t('allin') : t('aCall', { n: fmt(toCall) })); this.advance(); this.continueLoop(); },
-  humanRaise(total) { const p = this.players[0]; p.acted = true; this.doRaise(p, total); p.lastAction = p.allin ? t('aAllin', { n: fmt(p.bet) }) : t('aRaiseTo', { n: fmt(this.currentBet) }); this.advance(); this.continueLoop(); },
+  humanFold() { if (this.toAct !== 0 || this.phase === 'showdown') return; const p = this.players[0]; p.folded = true; p.acted = true; p.lastAction = t('aFold'); this.advance(); this.continueLoop(); },
+  humanCall() { if (this.toAct !== 0 || this.phase === 'showdown') return; const p = this.players[0]; p.acted = true; const toCall = this.currentBet - p.bet; this.doCall(p); p.lastAction = toCall === 0 ? t('aCheck') : (p.allin ? t('allin') : t('aCall', { n: fmt(toCall) })); this.advance(); this.continueLoop(); },
+  humanRaise(total) { if (this.toAct !== 0 || this.phase === 'showdown') return; const p = this.players[0]; p.acted = true; this.doRaise(p, total); p.lastAction = p.allin ? t('aAllin', { n: fmt(p.bet) }) : t('aRaiseTo', { n: fmt(this.currentBet) }); this.advance(); this.continueLoop(); },
 
   showdown() {
     this.phase = 'showdown';
