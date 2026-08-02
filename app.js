@@ -109,12 +109,12 @@ const GAME_META = {
   mississippi: { icon: '🌊', ready: false }, paigow: { icon: '🀄', ready: false }, fourcard: { icon: '4️⃣', ready: false },
   crazy4: { icon: '🤪', ready: false }, thbonus: { icon: '🎁', ready: false }, letitride: { icon: '🎢', ready: true },
   baccarat: { icon: '🎴', ready: true }, blackjack: { icon: '🂡', ready: true }, dragontiger: { icon: '🐉', ready: true },
-  casinowar: { icon: '⚔️', ready: true }, videopoker: { icon: '🃏', ready: true },
+  casinowar: { icon: '⚔️', ready: true }, videopoker: { icon: '🃏', ready: true }, bigsmall: { icon: '⚖️', ready: true },
 };
 const CATS = [
   { key: 'catVs', games: ['holdem', 'omaha', 'stud7', 'deuce27', 'horse'] },
   { key: 'catDealer', games: ['threecard', 'ultimateth', 'caribbean', 'letitride', 'mississippi', 'paigow', 'fourcard', 'crazy4', 'thbonus'] },
-  { key: 'catOther', games: ['baccarat', 'blackjack', 'dragontiger', 'casinowar', 'videopoker'] },
+  { key: 'catOther', games: ['baccarat', 'blackjack', 'dragontiger', 'casinowar', 'bigsmall', 'videopoker'] },
 ];
 
 /* ---------- 首頁：破產通知書 ---------- */
@@ -191,7 +191,7 @@ function renderLobby() {
 const GAME_OBJ = {
   blackjack: () => Blackjack, videopoker: () => VideoPoker, holdem: () => Holdem, baccarat: () => Baccarat,
   threecard: () => ThreeCard, ultimateth: () => UTH, caribbean: () => Caribbean, letitride: () => LetItRide,
-  dragontiger: () => DragonTiger, casinowar: () => CasinoWar,
+  dragontiger: () => DragonTiger, casinowar: () => CasinoWar, bigsmall: () => BigSmall,
 };
 
 function openGame(id) {

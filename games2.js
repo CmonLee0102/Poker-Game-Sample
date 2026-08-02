@@ -30,18 +30,20 @@ Object.assign(I18N.dict.zh, {
   howto_baccarat: '押「閒」、「莊」或「和」，也可加押閒／莊對子。|閒莊各發 2 至 3 張，最接近 9 點者勝。|閒賠 1 賠 1；莊賠 0.95(抽 5% 水);和賠 8 倍。|10 與人頭牌算 0 點，總和只取個位數。',
   howto_blackjack: '下注後與莊家各發 2 張，莊家有一張明牌。|點數越接近 21 越好，但超過就「爆牌」。|可要牌、停牌、加倍，成對還能分牌。|前兩張 21 點賠 3 賠 2，莊家 17 點停牌。',
   howto_videopoker: '選好每枚硬幣與投注枚數後，發 5 張牌。|點選想保留的牌，其餘換掉。|換牌後依牌型賠付，一對 J 以上才中獎。|投滿 5 枚時，皇家同花順高達 800 倍!',
+  howto_bigsmall: '下注後，你和莊家各發一張牌。|點數大的一方獲勝，賠 1 賠 1(A 最大)。|平手則退還本金。|一翻兩瞪眼，最直接的比大小!',
   // 遊戲名
   g_omaha: '奧馬哈撲克', g_stud7: '七張梭哈', g_deuce27: '2-7 三次換牌', g_horse: 'H.O.R.S.E.',
   g_threecard: '三張撲克', g_ultimateth: '終極德州撲克', g_caribbean: '加勒比海撲克',
   g_mississippi: '密西西比撲克', g_paigow: '牌九撲克', g_fourcard: '四張撲克',
   g_crazy4: '瘋狂四張撲克', g_thbonus: '德州紅利撲克', g_letitride: '狂歡梭哈',
-  g_dragontiger: '龍虎鬥', g_casinowar: '賭場戰爭',
+  g_dragontiger: '龍虎鬥', g_casinowar: '賭場戰爭', g_bigsmall: '比大小',
   d_threecard: '下注底注與對子紅利，三張定勝負。順子大於同花!',
   d_ultimateth: '一注到底的德州撲克，越早下注賠越多。對抗莊家。',
   d_caribbean: '五張梭哈對莊家。莊家需 A-K 以上才算成立。',
   d_letitride: '三注下注，牌好留、牌壞收。湊出對 10 以上就贏。',
   d_dragontiger: '龍與虎各一張，比大小。最簡單刺激的紙牌。',
   d_casinowar: '一張定生死，比大小。平手可宣戰!',
+  d_bigsmall: '最簡單的比牌：你和莊家各一張，點數大的贏。',
   // 共用
   ante: '底注 Ante', playBet: '加注 Play', fold: '棄牌 Fold', check: '過牌 Check',
   dealerQ: '莊家', playerQ: '你', dealerNoQualify: '莊家不成立', dealerQualifies: '莊家成立',
@@ -85,17 +87,19 @@ Object.assign(I18N.dict.en, {
   howto_baccarat: 'Bet on Player, Banker or Tie — or on a Player/Banker pair.|Each side draws 2–3 cards; closest to 9 wins.|Player pays 1:1, Banker 0.95:1 (5% commission), Tie 8:1.|Tens and face cards count as 0 — only the last digit of the total matters.',
   howto_blackjack: 'After betting, you and the dealer get 2 cards; one dealer card is face up.|Get as close to 21 as you can without going over (busting).|Hit, stand, double down, or split a pair.|A Blackjack (21 on your first two cards) pays 3:2; the dealer stands on 17.',
   howto_videopoker: 'Choose your coin size and number of coins, then get 5 cards.|Click the cards you want to keep; the rest are replaced.|After the draw you\'re paid by hand — Jacks or better wins.|Bet the full 5 coins and a royal flush pays up to 800×!',
+  howto_bigsmall: 'After betting, you and the dealer each get one card.|The higher card wins, paying even money (Ace high).|A tie returns your bet.|Fast and simple — highest card takes it!',
   g_omaha: 'Omaha Hold\'em', g_stud7: 'Seven-Card Stud', g_deuce27: '2-7 Triple Draw', g_horse: 'H.O.R.S.E.',
   g_threecard: 'Three Card Poker', g_ultimateth: 'Ultimate Texas Hold\'em', g_caribbean: 'Caribbean Stud',
   g_mississippi: 'Mississippi Stud', g_paigow: 'Pai Gow Poker', g_fourcard: 'Four Card Poker',
   g_crazy4: 'Crazy 4 Poker', g_thbonus: "Texas Hold'em Bonus", g_letitride: 'Let It Ride',
-  g_dragontiger: 'Dragon Tiger', g_casinowar: 'Casino War',
+  g_dragontiger: 'Dragon Tiger', g_casinowar: 'Casino War', g_bigsmall: 'Hi-Lo Showdown',
   d_threecard: 'Bet Ante and Pair Plus. Three cards decide it. Straight beats flush!',
   d_ultimateth: 'One bet, ride it out. Bet earlier to win more. You vs the dealer.',
   d_caribbean: 'Five-card stud vs the dealer. Dealer needs A-K or better to qualify.',
   d_letitride: 'Three bets — keep them on good cards, pull them on bad. Pair of 10s wins.',
   d_dragontiger: 'One card each for Dragon and Tiger. Simplest thrill in cards.',
   d_casinowar: 'One card decides it all. Go to war on a tie!',
+  d_bigsmall: 'The simplest showdown: one card each, higher card wins.',
   ante: 'Ante', playBet: 'Play', fold: 'Fold', check: 'Check',
   dealerQ: 'Dealer', playerQ: 'You', dealerNoQualify: 'Dealer does not qualify', dealerQualifies: 'Dealer qualifies',
   push: 'Push', win1: 'Win', lose1: 'Lose', reveal: 'Reveal', deal: 'Deal',
@@ -668,5 +672,66 @@ const CasinoWar = {
     const net = payout - this.ante; Bank.record(net);
     this._msg = kind === 'win' ? t('youWon', { n: fmt(net) }) : t('youLost', { n: fmt(this.ante) });
     this._cls = kind === 'win' ? 'win' : 'lose'; this.phase = 'done'; this.render();
+  },
+};
+
+/* ============================================================
+   比大小 Hi-Lo Showdown  (A 最大，大者勝，平手退還)
+   ============================================================ */
+const BigSmall = {
+  ante: 25, phase: 'bet', p: null, d: null,
+  enter() { this.ante = 25; this.phase = 'bet'; this.p = null; this.d = null; this._msg = ''; this._cls = ''; this.render(); },
+
+  render() {
+    App.redraw = () => this.render();
+    app.innerHTML = `
+    ${tableHead('g_bigsmall')}
+    <div class="table-wrap"><div class="felt">
+      <div class="seat-row" style="gap:8vh">
+        <div class="seat"><div class="name">🧑 ${t('playerQ')} ${this.p ? '· ' + this.p.label : ''}</div>
+          <div class="cards">${this.p ? cardHTML(this.p) : cardHTML(null)}</div></div>
+        <div class="seat"><div class="name">🎩 ${t('dealerQ')} ${this.d ? '· ' + this.d.label : ''}</div>
+          <div class="cards">${this.d ? cardHTML(this.d) : cardHTML(null)}</div></div>
+      </div>
+      <div class="board-area"><div class="pot">${t('ante')} ${fmt(this.ante)}</div></div>
+    </div>
+    <div class="msg-bar ${this._cls}">${this._msg || ''}</div>
+    <div class="controls" id="ctrls"></div></div>`;
+    this.renderControls();
+  },
+
+  renderControls() {
+    const c = document.getElementById('ctrls');
+    if (this.phase === 'bet') {
+      c.innerHTML = `<div class="grp"><span class="small">${t('ante')}: ${fmt(this.ante)}</span>${chipsRow()}<button class="btn ghost sm" id="clr">${t('clear')}</button></div>
+        <button class="btn primary" id="deal" ${this.ante > 0 ? '' : 'disabled'}>${t('deal')}</button>`;
+      c.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { const v = +b.dataset.add; if (this.ante + v > Bank.get()) return toast(t('notEnough')); this.ante += v; this.render(); });
+      document.getElementById('clr').onclick = () => { this.ante = 0; this.render(); };
+      document.getElementById('deal').onclick = () => this.deal();
+    } else {
+      c.innerHTML = `<button class="btn primary" id="again">${t('playAgain')}</button>
+        <button class="btn ghost" onclick="renderLobby()">${t('leaveTable')}</button>`;
+      document.getElementById('again').onclick = () => this.enter();
+    }
+  },
+
+  async deal() {
+    if (this.ante > Bank.get()) return toast(t('notEnough'));
+    Bank.add(-this.ante); refreshChips();
+    const deck = shuffle(freshDeck());
+    this.phase = 'reveal'; this.p = deck.pop(); this.render(); await sleep(350);
+    this.d = deck.pop(); this.render(); await sleep(420);
+    this.settle();
+  },
+
+  settle() {
+    const pv = this.p.rank, dv = this.d.rank;
+    let payout = 0;
+    if (pv > dv) payout = this.ante * 2; else if (pv === dv) payout = this.ante; // 平手退還
+    Bank.add(payout); refreshChips();
+    const net = payout - this.ante; Bank.record(net);
+    const gap = ` (${t('playerQ')} ${this.p.label} · ${t('dealerQ')} ${this.d.label})`;
+    this._msg = (net > 0 ? t('youWon', { n: fmt(net) }) : net < 0 ? t('youLost', { n: fmt(this.ante) }) : t('push')) + gap;
+    this._cls = resultCls(net); this.phase = 'done'; this.render();
   },
 };
