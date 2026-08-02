@@ -303,7 +303,7 @@ input[type=range] { width: clamp(120px, 16vw, 190px); accent-color: var(--gold);
 .bill {
   position: relative; margin: 20px auto 4px; width: min(400px, 82%);
   background: linear-gradient(135deg, #16653a, #1f8a4f 45%, #14603790);
-  border: 2px solid #0d4426; border-radius: 8px; padding: 14px 18px; color: #eafff2;
+  border: 2px solid #0d4426; border-radius: 8px; padding: 22px 18px; color: #eafff2;
   box-shadow: 0 8px 18px rgba(0,0,0,.4); transform: rotate(1.4deg);
   font-family: "Segoe UI", system-ui, sans-serif; overflow: hidden;
 }

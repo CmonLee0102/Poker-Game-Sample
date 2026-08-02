@@ -127,7 +127,7 @@ const CATS = [
 /* ---------- 首頁：破產通知書 ---------- */
 function renderHome() {
   App.redraw = renderHome; screenTransition();
-  const amt = fmt(Bank.get());
+  const amt = fmt(1000); // 紙鈔固定顯示 1,000
   const d = new Date();
   const ds = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   app.innerHTML = `
@@ -142,9 +142,7 @@ function renderHome() {
       <div class="notice-sign">${t('bkSign')} ✒</div>
       <div class="bill">
         <div class="tape tape-l"></div><div class="tape tape-r"></div>
-        <div class="bill-brand">${t('billBrand')}</div>
         <div class="bill-amount">${amt}</div>
-        <div class="bill-note">${t('billNote')}</div>
       </div>
     </div>
     <button class="btn primary" id="enterBtn" style="font-size:16px;padding:13px 30px">${t('homeEnter')}</button>
