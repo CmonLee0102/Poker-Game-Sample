@@ -1004,6 +1004,21 @@ const Holdem = {
 
 function sameSet(a, b) { if (a.length !== b.length) return false; return a.every(x => b.includes(x)); }
 
+/* ---------- 亮 / 暗 主題 ---------- */
+const Theme = {
+  KEY: 'casino_theme',
+  get() { return localStorage.getItem(this.KEY) || 'dark'; },
+  set(v) { localStorage.setItem(this.KEY, v); },
+};
+function applyTheme() {
+  const light = Theme.get() === 'light';
+  if (document.body && document.body.classList) {
+    if (light) document.body.classList.add('light'); else document.body.classList.remove('light');
+  }
+  const b = document.getElementById('themeBtn');
+  if (b) b.textContent = light ? '🌙' : '☀️'; // 顯示目前模式圖示
+}
+
 /* ---------- 啟動 ---------- */
 document.getElementById('brand').onclick = renderHome;
 document.getElementById('langBtn').onclick = () => {
@@ -1011,6 +1026,11 @@ document.getElementById('langBtn').onclick = () => {
   applyStaticI18n();
   App.redraw();
 };
+document.getElementById('themeBtn').onclick = () => {
+  Theme.set(Theme.get() === 'light' ? 'dark' : 'light');
+  applyTheme();
+};
+applyTheme();
 applyStaticI18n();
 refreshChips();
 renderHome();  // 一開始顯示破產通知書

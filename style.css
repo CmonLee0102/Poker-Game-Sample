@@ -422,3 +422,29 @@ h1 { text-shadow: 0 2px 8px rgba(0,0,0,.5); }
 @media (min-width: 1500px) {
   .table-wrap { max-width: 1320px; }
 }
+
+/* ============================================================
+   亮色(白)模式 — body.light 覆蓋變數與關鍵表面
+   牌桌綠絨保留，僅切換周邊介面亮暗
+   ============================================================ */
+body.light {
+  --gold: #a9761a; --gold-2: #855b12;
+  --panel: #ffffff; --panel-2: #f3f5f8; --line: #d7dce3;
+  --text: #1b2028; --muted: #5c6673;
+  background: radial-gradient(1200px 700px at 50% -20%, #eef2f7 0%, #dde3ea 58%, #ccd3dd 100%);
+}
+body.light::before { background: radial-gradient(600px 300px at 50% 50%, rgba(169,118,26,.06), transparent 70%); }
+body.light .topbar { background: linear-gradient(180deg, #ffffff, #e9edf2); box-shadow: 0 3px 14px rgba(0,0,0,.12); }
+body.light .brand span { color: var(--text); }
+body.light .chip-display { background: #ffffff; }
+body.light .btn { background: linear-gradient(180deg, #ffffff, #eaeef3); color: var(--text); border-color: #cfd5dd; }
+body.light .btn.ghost { background: transparent; }
+body.light .lang-btn { background: linear-gradient(180deg, #ffffff, #eaeef3); color: var(--gold); border-color: var(--gold-2); }
+body.light .lang-btn:hover { background: var(--gold); color: #fff; }
+body.light .game-card, body.light .tile, body.light .controls, body.light .modal { box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+body.light .card.back { border-color: #dfe4ea; }
+body.light .paytable td { border-color: rgba(0,0,0,.12); }
+/* 綠絨牌桌在亮色模式仍是深綠舞台，內部文字維持亮色以保持可讀 */
+body.light .felt { color: #eef3f8; }
+body.light .felt .small { color: rgba(255,255,255,.72); }
+body.light .setup-lbl { color: rgba(255,255,255,.75); }
